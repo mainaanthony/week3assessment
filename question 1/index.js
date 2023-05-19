@@ -1,90 +1,160 @@
-const balance = document.querySelector("#balance");
-const inc_amt = document.querySelector("#inc-amt");
-const exp_amt = document.querySelector("#exp-amt");
-const trans = document.querySelector("#trans");
-const form = document.querySelector("#form");
-const description = document.querySelector("#desc");
-const amount = document.querySelector("#amount")
+const posts_url = "'https://jsonplaceholder.typicode.com/posts/1"
 
 
-const listings = document.querySelector('.trans')
+
+//getting a resource
+
+async function getPosts(){
+  let result = await fetch('https://jsonplaceholder.typicode.com/posts')
+  //this first fetch just gets the data but in unreadable format
+  console.log(result)
+  let products = await result.json()
+  //this second await now converts the data to readable data
+  console.log(products)
+  }
 
 
-const list = (transaction)=>{
 
 
-const sign = transaction.amount < 0 ? "-" : "+"    
-const item = document.createElement('li')
-item.classList.add(transaction.amount < 0 ?  "exp" : "inc")
-item.innerHTML =  `${transaction.description} <span> ${sign} ${Math.abs(transaction.amount)} </span>
- <button class="btn-del" onclick="removeTrans(${transaction.id})"> del</button>`
- 
- 
- trans.appendChild(item)
- console.log(transaction)
+
+// console.log(getPosts())
+
+
+
+
+
+
+
+
+// //posting a post
+async function postPosts(){
+  try{
+
+  let res =  await fetch('https://jsonplaceholder.typicode.com/posts', {
+  method: 'POST',
+  body: JSON.stringify({
+    title: 'foo',
+    body: 'bar',
+    userId: 1,
+  }),
+  headers: {
+    'Content-type': 'application/json; charset=UTF-8',
+  },
+})
+
+  }catch(error){
+     let results = await res.json()
+     console.log(results)
+
+  }
 }
 
-
-const localStorageTrans = JSON.parse(localStorage.getItem("trans"));
-let transactions = localStorage.getItem("trans") !== null ? localStorageTrans : [];
+console.log(postPosts())
 
 
+//update 
 
+async function updatePost(){
+     try{
+      let res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+        method: 'PUT',
+        body: JSON.stringify({
+          id: 1,
+          title: 'foo',
+          body: 'bar',
+          userId: 1,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+      
+       
 
-function addTransaction(e){
-  e.preventDefault();
-  if(description.value.trim() == "" || amount.value.trim() == ""){
-    alert("Please enter a description and amount")
+     }catch(error){
 
-  }else{
-    const transaction = {
-        id : uniqueId(),
-        description: description.value,
-        amount: +amount.value
-    };
-    transactions.unshift(transaction)
-    list (transaction)
-    description.value = "";
-    amount.value = "";
-    updateLocalStorage()
+         let results = await res.json()
+         console.log(results)
+
+     }
+
     
 
-  }
+
+
+
+//   }
+
+// console.log(updatePost())
+
+
+///delete a resource
+
+fetch('https://jsonplaceholder.typicode.com/posts/1', {
+  method: 'DELETE',
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//listing the nested resources
+
+
+async function listNestedResources(){
+try{
+  let res =  await fetch('https://jsonplaceholder.typicode.com/posts/1/comments')
+}catch(error)
+{
+  let result = await res.json()
+  console.log(result)    
+
+
 }
 
 
-function removeTrans(id) {
-  if (confirm("Are you sure you want to delete this Transaction?")) {
-    transactions = transactions.filter((transaction) => transaction.id != id);
-    config();
-    updateLocalStorage();
-  } else {
-    return;
-  }
-}
-
-form.addEventListener("submit" , addTransaction)
-
-
-
-function uniqueId(){
-    return Math.floor(Math.random()  * 100000)
 
 }
 
+console.log(listNestedResources())
 
 
 
 
-function updateLocalStorage() {
-  localStorage.setItem("trans", JSON.stringify(transactions));
+
+
+
+
+
+
+
+
+
+
+
+
+//filterPosts
+
+async function filterPosts(){
+  let res = await fetch('https://jsonplaceholder.typicode.com/posts?userId=1')
+try{
+
+}catch(error){
+  let results = await res.json();
+  console.log(results)
+
 }
 
 
-function config() {
-  trans.innerHTML = "";
-  transactions.forEach(list);
  
+
 }
 
-
+console.log(filterPosts())
